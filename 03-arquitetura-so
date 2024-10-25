@@ -1,0 +1,29 @@
+# Arquiteturas de Sistemas Operacionais
+
+## Informações gerais
+
+- Capítulo: [Arquitetura de SO](https://wiki.inf.ufpr.br/maziero/lib/exe/fetch.php?media=socm:socm-03.pdf)
+- Disciplina: *sistemas operacionais*
+- Livro: [Sistemas Operacionais: Conceitos e Mecanismos](https://wiki.inf.ufpr.br/maziero/doku.php?id=socm:start)
+
+## Aluno
+
+- nome: Felipe Gabriel Rodrigues Leal dos Santos
+- matrícula: 20241014040036
+
+## Respostas dos exercícios
+03-arquitetura-so/index.md
+
+1. Enviei por email
+
+2. O núcleo do Linux é considerado monolítico. Isso ocorre porque, embora ele suporte a carga dinâmica de módulos, a maior parte do sistema operacional, incluindo os gerentes de tarefas e dispositivos, executa no modo kernel, fazendo com que as chamadas de sistema sejam processadas de maneira eficiente sem a necessidade de comunicação entre diferentes módulos que caracterizam um micronúcleo.
+
+3. (a) Incorreta: Uma máquina virtual de sistema não é construída para suportar uma aplicação escrita em uma linguagem de programação específica, como Java. Isso descreve uma máquina virtual de aplicação (como a JVM). Uma máquina virtual de sistema (como o VMware) suporta a execução de um sistema operacional completo.
+
+(b) Correta: Um hipervisor convidado realmente executa sobre um sistema operacional hospedeiro.
+
+(c) Incorreta: Em um sistema operacional micronúcleo, os diversos componentes do sistema não são construídos como módulos interconectados executando dentro do núcleo. Em vez disso, a maioria dos serviços do sistema operacional são executados em espaço de usuário e a comunicação entre eles é feita através de mensagens.
+
+(d) Incorreta: Núcleos monolíticos não são conhecidos pela sua robustez e facilidade de manutenção. Eles são conhecidos pela sua alta performance, mas podem ser difíceis de manter e suscetíveis a falhas catastróficas quando comparados aos micronúcleos.
+
+(e) Correta: Em um sistema operacional micronúcleo, as chamadas de sistema são implementadas através de trocas de mensagens entre diferentes componentes do sistema.

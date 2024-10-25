@@ -1,0 +1,184 @@
+# Conceito de tarefas
+## Informações gerais
+- Capítulo: [Conceito de tarefas](https://wiki.inf.ufpr.br/maziero/lib/exe/fetch.php?media=socm:socm-04.pdf)
+- Disciplina: *sistemas operacionais*
+- Livro: [Sistemas Operacionais: Conceitos e Mecanismos](https://wiki.inf.ufpr.br/maziero/doku.php?id=socm:start)
+## Aluno
+- nome: Felipe Gabriel Rodrigues Leal dos Santos 
+- matrícula: 20241014040036
+## Respostas dos exercícios
+04-tarefa-conceito/index.md
+
+1. O que significa time sharing e qual a sua importância em um sistema operacional?
+Time sharing (ou "compartilhamento de tempo") é uma técnica que permite a múltiplos usuários ou processos compartilhar os recursos de um único sistema de computação de forma eficiente e simultânea. Em um ambiente de time sharing, o sistema operacional aloca pequenos intervalos de tempo, chamados de "quantum", para cada tarefa ou processo. Quando o quantum de um processo se esgota, o controle é transferido para outro processo, permitindo que vários processos sejam executados aparentemente ao mesmo tempo.
+
+Importância:
+
+Eficiência: Maximiza a utilização do processador, minimizando o tempo ocioso.
+
+Responsividade: Garante uma resposta rápida aos usuários, tornando o sistema mais interativo.
+
+Equidade: Distribui o tempo de CPU de forma justa entre os processos, evitando que um único processo monopolize os recursos.
+
+Isolamento: Permite que diferentes usuários ou processos executem suas tarefas de forma isolada, sem interferências significativas.
+
+2. Como e com base em que critérios é escolhida a duração de um quantum de processamento?
+A duração de um quantum de processamento é um fator crítico no desempenho de um sistema de time sharing. Ela deve ser escolhida com base em uma série de critérios:
+
+Tamanho do Quantum:
+
+Pequeno: Aumenta a responsividade do sistema, mas pode levar a um maior overhead devido ao aumento na frequência de trocas de contexto.
+
+Grande: Reduz o overhead de trocas de contexto, mas pode resultar em uma menor responsividade para processos interativos.
+
+Critérios:
+
+Natureza das Tarefas: Processos interativos geralmente requerem quanta menores para garantir uma resposta rápida, enquanto processos de longa duração podem ter quanta maiores.
+
+Overhead de Troca de Contexto: Deve-se minimizar o tempo gasto nas trocas de contexto para evitar degradação de desempenho.
+
+Carga do Sistema: A quantidade de processos ativos pode influenciar na escolha do quantum. Em sistemas com alta carga, quanta menores podem ajudar a manter a responsividade.
+
+Política do Sistema: As políticas de escalonamento adotadas pelo sistema operacional também podem ditar a duração do quantum.
+
+3. Considerando o diagrama de estados dos processos apresentado na figura a
+seguir, complete o diagrama com a transição de estado que está faltando (t6) e
+apresente o significado de cada um dos estados e transições.
+
+Vamos completar o diagrama de estados dos processos e descrever cada estado e transição.
+
+Diagrama de Estados dos Processos
+Estado Atual:
+e1
+|
+t1
+v
+e3
+/
+t2 t4
+/
+e4 e5
+t3
+|
+v
+e5
+^
+t5
+|
+e2
+
+Para completar o diagrama, adicionamos a transição t6:
+e1
+/
+t1 t6
+|
+v e5
+e3
+/
+t2 t4
+/
+e4 e5
+t3
+|
+v
+e5
+^
+t5
+|
+e2
+
+Significado de Cada Estado e Transições
+Estados:
+
+e1 - Novo: Processo acabou de ser criado, mas ainda não está pronto para execução.
+
+e2 - Bloqueado: Processo está esperando por um evento, como uma operação de E/S, e não pode executar.
+
+e3 - Pronto: Processo está pronto para executar, aguardando a alocação da CPU.
+
+e4 - Em execução: Processo está atualmente utilizando a CPU.
+
+e5 - Finalizado: Processo completou sua execução.
+
+Transições:
+
+t1 - Admissão: Transição de "Novo" para "Pronto". O processo é admitido pelo escalonador e fica pronto para ser executado.
+
+t2 - Escalonamento: Transição de "Pronto" para "Em execução". O processo é escalonado para a CPU.
+
+t3 - Saída: Transição de "Em execução" para "Finalizado". O processo conclui sua execução.
+
+t4 - Preempção: Transição de "Em execução" para "Pronto". O processo é interrompido pela CPU e colocado de volta na fila de prontos.
+
+t5 - Evento Concluído: Transição de "Bloqueado" para "Pronto". O evento pelo qual o processo estava esperando foi concluído, e ele está novamente pronto para execução.
+
+t6 - Terminação: Transição de "Novo" para "Finalizado". O processo é encerrado sem nunca ter sido escalonado.
+
+4. E (Executando) → P (Pronta)
+
+Possível: Sim.
+
+Exemplo: A transição de um processo de "Executando" para "Pronta" pode ocorrer durante a preempção, quando um processo é interrompido pela CPU para dar lugar a outro processo de maior prioridade ou após o término do quantum de tempo alocado ao processo.
+
+E (Executando) → S (Suspensa)
+
+Possível: Sim.
+
+Exemplo: Um processo que está executando pode ser suspenso se ele estiver aguardando por um evento específico, como uma operação de E/S que ainda não foi concluída.
+
+S (Suspensa) → E (Executando)
+
+Possível: Sim.
+
+Exemplo: Um processo suspenso pode voltar a executar se o evento pelo qual ele estava aguardando for concluído e ele for escalonado novamente pela CPU.
+
+P (Pronta) → N (Nova)
+
+Possível: Não.
+
+Justificativa: Uma vez que um processo está no estado de "Pronta", ele não pode voltar ao estado de "Nova". O estado "Nova" é somente para processos que acabaram de ser criados.
+
+S (Suspensa) → T (Terminada)
+
+Possível: Não.
+
+Justificativa: Um processo suspenso não pode ser terminado diretamente. Ele deve primeiro ser movido para o estado "Pronta" ou "Executando" antes de ser terminado.
+
+E (Executando) → T (Terminada)
+
+Possível: Sim.
+
+Exemplo: Quando um processo completa sua execução, ele passa do estado "Executando" diretamente para o estado "Terminada".
+
+N (Nova) → S (Suspensa)
+
+Possível: Não.
+
+Justificativa: Um processo que está no estado "Nova" deve primeiro ser admitido e movido para o estado "Pronta" antes de poder ser suspenso.
+
+P (Pronta) → S (Suspensa)
+
+Possível: Sim.
+
+Exemplo: Um processo que está no estado "Pronta" pode ser suspenso se houver uma necessidade de liberar recursos ou por alguma política do sistema que priorize a suspensão de processos prontos.
+
+5.
+[N] Nova: O código da tarefa está sendo carregado.
+
+[P] Pronta: As tarefas são ordenadas por prioridades.
+
+[E] Executando: A tarefa sai deste estado ao solicitar uma operação de entrada/saída.
+
+[T] Terminada: Os recursos usados pela tarefa são devolvidos ao sistema.
+
+[P] Pronta: A tarefa vai a este estado ao terminar seu quantum.
+
+[P] Pronta: A tarefa só precisa do processador para poder executar.
+
+[S] Suspensa: O acesso a um semáforo em uso pode levar a tarefa a este estado.
+
+[E] Executando: A tarefa pode criar novas tarefas.
+
+[E] Executando: Há uma tarefa neste estado para cada processador do sistema.
+
+[S] Suspensa: A tarefa aguarda a ocorrência de um evento externo.

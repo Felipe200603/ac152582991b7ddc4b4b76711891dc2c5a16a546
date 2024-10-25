@@ -1,0 +1,242 @@
+# Implementação de tarefas
+## Informações gerais
+- Capítulo: [Implementação de tarefas](https://wiki.inf.ufpr.br/maziero/lib/exe/fetch.php?media=socm:socm-05.pdf)
+- Disciplina: *sistemas operacionais*
+- Livro: [Sistemas Operacionais: Conceitos e Mecanismos](https://wiki.inf.ufpr.br/maziero/doku.php?id=socm:start)
+## Aluno
+- nome: Felipe Gabriel Rodrigues Leal dos Santos
+- matrícula: 20241014040036
+## Respostas dos exercícios
+05-tarefa-implementacao/index.md
+1.
+Task Control Block (TCB)
+O que é: O Task Control Block (TCB) é uma estrutura de dados crucial nos sistemas operacionais multitarefa. Ele armazena todas as informações necessárias para gerenciar e controlar a execução de uma tarefa (ou processo).
+
+Para que serve: O TCB serve para manter o estado de uma tarefa quando ela é preemptada, ou seja, quando a execução é interrompida para que outra tarefa possa ser executada. Ao armazenar o estado da tarefa no TCB, o sistema operacional pode retomar a execução da tarefa de onde ela parou.
+
+O que contém:
+
+Identificação do processo: Um identificador único para a tarefa.
+
+Estado do processo: Pode ser estado pronto, executando, bloqueado, etc.
+
+Contexto de execução: Inclui registros da CPU, como o contador de programa e os ponteiros de pilha.
+
+Informações de controle de CPU: Priorização da tarefa e outras informações de agendamento.
+
+Memória: Informação sobre a alocação de memória da tarefa.
+
+Recursos: Informações sobre recursos alocados à tarefa, como arquivos abertos e dispositivos de E/S.
+
+2. Diagrama de tempo e execução do código
+Código:
+int main() {
+  int x = 0;
+  fork();
+  x++;
+  sleep(5);
+  wait(0);
+  fork();
+  wait(0);
+  sleep(5);
+  x++;
+  printf("Valor de x: %d\n", x);
+}
+
+Diagrama de tempo:
+Início: x = 0
+
+fork(): Cria um novo processo.
+
+Processo Pai e Processo Filho.
+
+x++: Incrementa x para ambos os processos (x = 1).
+
+sleep(5): Ambos os processos dormem por 5 segundos.
+
+wait(0): O processo pai espera pelo processo filho.
+
+fork(): Cria um novo processo para ambos (total de 4 processos agora).
+
+wait(0): Os processos pais esperam pelos novos processos filhos.
+
+sleep(5): Todos os processos dormem por 5 segundos.
+
+x++: Incrementa x em todos os processos (x = 2).
+
+printf("Valor de x: %d\n", x): Exibe o valor de x.
+
+Saída:
+Valor de x: 2
+Valor de x: 2
+Valor de x: 2
+Valor de x: 2
+
+Duração aproximada da execução:
+A duração aproximada da execução é de 10 segundos, considerando os dois sleep(5).
+
+3.
+Vamos analisar o programa para determinar quantas letras "X" serão impressas na tela.
+
+Código:
+#include <stdio.h>
+#include <sys/types.h>
+#include <unistd.h>
+#include <stdlib.h>
+
+int main(int argc, char *argv[]) {
+    pid_t pid[10];
+    int i;
+    int N = atoi(argv[argc-2]);
+
+    for (i = 0; i < N; i++) 
+        pid[i] = fork();
+
+    if (pid[0] != 0 && pid[N-1] != 0) 
+        pid[N] = fork();
+
+    printf("X");
+    return 0;
+}
+
+Linha de Comando:
+a.out 4 3 2 1
+
+Aqui, N será igual a 2 (valor de argv[argc-2]).
+
+Análise:
+Primeiro for loop (for (i = 0; i < N; i++) pid[i] = fork();):
+
+N é 2, então o loop fará duas iterações.
+
+Na primeira iteração (i = 0): um processo filho é criado.
+
+Na segunda iteração (i = 1): outro processo filho é criado.
+
+Ao final do loop, temos 4 processos (1 pai + 2 filhos + 1 neto).
+
+Condição if (if (pid[0] != 0 && pid[N-1] != 0) pid[N] = fork();):
+
+Essa condição verifica se os processos no índice 0 e N-1 (1) não são filhos (pid != 0).
+
+Como ambos os processos não são filhos do processo inicial, a condição é verdadeira.
+
+Portanto, mais um fork() é executado, criando mais um processo filho.
+
+Temos agora 8 processos (4 originais + 4 do segundo fork).
+
+Impressão:
+Cada processo, inclusive o processo pai original, executa o printf("X") uma vez.
+
+Contagem final:
+Após todas as criações de processos, teremos ao todo 8 processos.
+
+Cada um imprime "X" uma vez.
+
+Portanto, 8 letras "X" serão impressas na tela.
+
+4. O que são threads e para que servem?
+Threads são unidades básicas de execução dentro de um processo. Um único processo pode ter múltiplas threads, que compartilham os mesmos recursos do processo principal, como memória e arquivos abertos, mas podem ser executadas independentemente e em paralelo. Elas são usadas para melhorar a eficiência de um programa, permitindo que múltiplas tarefas sejam realizadas simultaneamente.
+
+5. Vantagens e desvantagens de threads em relação a processos
+Vantagens:
+
+Compartilhamento de Memória: Threads dentro de um mesmo processo compartilham o mesmo espaço de memória, o que facilita a comunicação e troca de dados entre elas.
+
+Performance: Criar e gerenciar threads é geralmente mais rápido e consome menos recursos do que processos, pois threads são mais leves.
+
+Concurrência: Threads permitem a execução de várias tarefas ao mesmo tempo dentro do mesmo processo, melhorando a responsividade e eficiência do programa.
+
+Desvantagens:
+
+Condições de Corrida: Como threads compartilham o mesmo espaço de memória, há um risco maior de condições de corrida, onde várias threads tentam acessar e modificar a mesma variável ao mesmo tempo, causando comportamentos inesperados.
+
+Depuração Complexa: Depurar programas multithread pode ser muito mais complexo do que depurar programas com processos únicos, devido à interação e interdependência entre as threads.
+
+Sobrecarga de Sincronização: A necessidade de sincronização entre threads para evitar condições de corrida e outras inconsistências pode introduzir overhead e reduzir os benefícios de performance.
+
+6. Exemplos de problemas cuja implementação multi-thread não tem desempenho melhor que a sequencial
+Problemas Fortemente Sequenciais: Algoritmos que têm dependências sequenciais fortes, onde cada etapa depende estritamente da saída da etapa anterior, não se beneficiam da execução em múltiplas threads. Exemplos incluem certos tipos de algoritmos de compressão e decompressão.
+
+Tarefas de I/O Intensivas: Programas que são limitados principalmente por operações de entrada/saída, como a leitura e escrita de arquivos grandes em disco, não se beneficiam significativamente de múltiplas threads, pois a velocidade é limitada pelo hardware de I/O e não pelo processamento da CPU.
+
+7.
+a) many-to-one (N:1)
+
+(a) Tem a implementação mais simples, leve e eficiente.
+
+(d) Não permite explorar a presença de várias CPUs pelo mesmo processo.
+
+(f) Geralmente implementado por bibliotecas.
+
+(h) Se um thread bloquear, todos os demais têm de esperar por ele.
+
+b) one-to-one (1:1)
+
+(c) Pode impor uma carga muito pesada ao núcleo.
+
+(g) É o modelo implementado no Windows NT e seus sucessores.
+
+(i) Cada thread no nível do usuário tem sua correspondente dentro do núcleo.
+
+c) many-to-many (N:M)
+
+(b) Multiplexa os threads de usuário em um pool de threads de núcleo.
+
+(e) Permite uma maior concorrência sem impor muita carga ao núcleo.
+
+(j) É o modelo com implementação mais complexa.
+
+8.
+ a) Diagramas de Execução
+Modelo N:1 (Many-to-One)
+Neste modelo, todas as threads de usuário são mapeadas para uma única thread no nível do núcleo. Se uma thread faz uma chamada de sistema (syscall), todas as threads são bloqueadas.
+
+main cria tA e tB.
+
+tA executa e faz sleep(1), bloqueando todas as threads.
+
+Após 1 segundo, tA imprime x: 1, y: 1 e chama thread_exit.
+
+tB executa e faz sleep(1), bloqueando todas as threads.
+
+Após 1 segundo, tB imprime x: 1, y: 2 e chama thread_exit.
+
+main cria tC após os thread_join para tA e tB.
+
+tC executa e faz sleep(1), bloqueando todas as threads.
+
+Após 1 segundo, tC imprime x: 1, y: 3 e chama thread_exit.
+
+Modelo 1:1 (One-to-One)
+Neste modelo, cada thread de usuário é mapeada para uma thread de núcleo. Syscalls feitas por uma thread não bloqueiam as outras.
+
+main cria tA e tB.
+
+tA e tB executam sleep(1) simultaneamente em threads separadas.
+
+Após 1 segundo, tA e tB imprimem respectivamente x: 1, y: 1 e x: 1, y: 2.
+
+main cria tC após os thread_join para tA e tB.
+
+tC executa sleep(1).
+
+Após 1 segundo, tC imprime x: 1, y: 3.
+
+b) Durações Aproximadas de Execução
+N:1: Total de 3 segundos (1 segundo para cada sleep(1) em tA, tB e tC).
+
+1:1: Total de 2 segundos (1 segundo para tA e tB paralelamente, mais 1 segundo para tC).
+
+c) Saída do Programa na Tela
+Modelo N:1:
+x: 1, y: 1
+x: 1, y: 2
+x: 1, y: 3
+
+Modelo 1:1:
+x: 1, y: 1
+x: 1, y: 2
+x: 1, y: 3
+
+
